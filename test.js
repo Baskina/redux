@@ -21,13 +21,13 @@ describe('check getState method', () => {
 });
 
 describe('check dispatch method', () => {
-    test('after action "increment" is dispatched State field "count" should be equal 2', () => {
+    test('after some actions "increment" and "decrement" are dispatched State field "count" should be equal -10', () => {
         const store = createStore(reducer, initialState);
         store.dispatch({type: 'increment'});
         store.dispatch({type: 'increment'});
         store.dispatch({type: 'increment'});
-        store.dispatch({type: 'decrement'});
-        expect(store.getState()['count']).toBe(2);
+        store.dispatch({type: 'decrement', value: 13});
+        expect(store.getState()['count']).toBe(-10);
     });
 
     test('after action "increment" is dispatched State field "isLightTheme" should be equal true', () => {

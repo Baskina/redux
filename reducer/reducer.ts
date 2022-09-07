@@ -1,15 +1,13 @@
-import {initialState} from "../index";
-
 export interface ReduxAction {
     readonly type: string;
 }
 
-const counterReducer = <State, Action extends ReduxAction>(state, action): number => {
-    switch (action.type) {
+const counterReducer = <State, Action extends ReduxAction>(state, {type, value = 1}): number => {
+    switch (type) {
         case 'increment':
-            return state + 1;
+            return state + value;
         case 'decrement':
-            return state - 1;
+            return state - value;
     }
     return state;
 }
@@ -27,16 +25,16 @@ enum stateKeys {
     theme = 'isLightTheme'
 }
 
-const combineReducers = (reducers, initialState) => {
+const combineReducers = (reducers) => {
     const reducersKey = Object.keys(reducers);
 
     return function combination <State, Action extends ReduxAction>(state: State, action: Action): State {
-        const nextState = initialState;
+        const nextState = [] as State;
 
         reducersKey.forEach(key => {
             const reducer = reducers[key];
-            const previousReducerState = state[stateKeys[key]];
-            nextState[stateKeys[key]] = reducer(previousReducerState, action);
+            const previousReducerStateForKey = state[stateKeys[key]];
+            nextState[stateKeys[key]] = reducer(previousReducerStateForKey, action);
         });
         return nextState;
     };
@@ -45,4 +43,4 @@ const combineReducers = (reducers, initialState) => {
 export const reducer = combineReducers({
     counter: counterReducer,
     theme: themeReducer,
-}, initialState);
+});
